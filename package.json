@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "start": "concurrently \"npm run dev\" \"npm run backend\"",
-    "backend": "nodemon --watch ../liver_cirrhosis_backend/ ../liver_cirrhosis_backend/index.js",
+    "start": "concurrently --raw \"npm run dev\" \"npm run backend\"",
+    "backend": "concurrently \"npx nodemon --watch ../healthcare_backend ../healthcare_backend/index.js\"",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
@@ -14,6 +14,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.3",
     "concurrently": "^9.2.0",
+    "lucide-react": "^0.563.0",
     "nodemon": "^3.1.10",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

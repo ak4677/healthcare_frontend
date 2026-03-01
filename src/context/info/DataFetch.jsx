@@ -13,9 +13,10 @@ export default function DataFetch(props) {
     const [Assistent, setAssistent] = useState(intial)
     const [doc_assistent, setdoc_assistent] = useState(intial)
     const [pati_assi_lab, setpati_assi_lab] = useState(intial)
-    const [labassi_pati,setlabassi_pati]=useState(intial);
-    const [predictedData,setpredictedData]=useState(intial)
-    const [patient_madical_data,setpatient_madical_data]=useState(intial)
+    const [labassi_pati, setlabassi_pati] = useState(intial);
+    const [predictedData, setpredictedData] = useState(intial)
+    const [patient_madical_data, setpatient_madical_data] = useState(intial)
+    const [skinPredictions, setSkinPredictions] = useState({});
     //patient data fetching
     const fetchdata = async () => {
         const response = await fetch("http://localhost:5000/api/datatras/doctor/patients", {
@@ -26,7 +27,7 @@ export default function DataFetch(props) {
             }
         })
         const data = await response.json();
-        // console.log("fetching"+data);
+        console.log("fetching"+data);
         Setpatinetdata(data)
     }
 
@@ -71,12 +72,12 @@ export default function DataFetch(props) {
             body: JSON.stringify({ doctor_id, patient_id })
         })
         const data = await response.json();
-        if(response.ok){
+        if (response.ok) {
             fetchassignment()
             alert(data);
 
         }
-        else{alert(data)}
+        else { alert(data) }
         // setassignments(data)
     }
 
@@ -132,12 +133,12 @@ export default function DataFetch(props) {
             body: JSON.stringify({ name, email, Number })
         })
         const data = await response.json()
-        if(response.ok){
+        if (response.ok) {
             getdoctors()
             alert(data.message);
 
         }
-        else{alert(data)}
+        else { alert(data) }
         // console.log("assi"+data);
     }
 
@@ -152,12 +153,12 @@ export default function DataFetch(props) {
             body: JSON.stringify({ name, email, Number, Age, sex })
         })
         const data = await response.json()
-        if(response.ok){
+        if (response.ok) {
             getpatients()
             alert(data.message);
 
         }
-        else{alert(data)}
+        else { alert(data) }
         // console.log("assi"+data);
     }
 
@@ -172,12 +173,12 @@ export default function DataFetch(props) {
             body: JSON.stringify({ name, email, Number, lab_name })
         })
         const data = await response.json()
-        if(response.ok){
+        if (response.ok) {
             getlabassistant()
             alert(data.message);
 
         }
-        else{alert(data)}
+        else { alert(data) }
         // console.log("assi"+data);
     }
 
@@ -191,9 +192,9 @@ export default function DataFetch(props) {
             }
         })
         const data = await response.json()
-        if(response.ok){
+        if (response.ok) {
             if (role === 'assignments') fetchassignment();
-        }else{
+        } else {
             alert(data.error || "Server fetching issue in assignment");
         }
     }
@@ -219,145 +220,220 @@ export default function DataFetch(props) {
         }
     }
 
-    const doc_create_assig=async (patient,lab_assistant)=>{
-        const response=await fetch("http://localhost:5000/api/datatras/doctor/assign-lab" ,{
+    const doc_create_assig = async (patient, lab_assistant) => {
+        const response = await fetch("http://localhost:5000/api/datatras/doctor/assign-lab", {
             method: "POST",
-            headers:{
+            headers: {
                 "Content-type": "application/json",
                 "auth-token": localStorage.getItem('token')
             },
-            body:JSON.stringify({patient,lab_assistant})
+            body: JSON.stringify({ patient, lab_assistant })
         })
-        const data=await response.json();
-        if(response.ok){
+        const data = await response.json();
+        if (response.ok) {
             doc_get_assis();
             alert(data.message)
-        }else{
+        } else {
             alert(data)
         }
     }
 
-    const doc_delete_assig=async (id)=>{
-        const response=await fetch(`http://localhost:5000/api/datatras/doctor/deletelab/${id}`,{
+    const doc_delete_assig = async (id) => {
+        const response = await fetch(`http://localhost:5000/api/datatras/doctor/deletelab/${id}`, {
             method: "DELETE",
-            headers:{
+            headers: {
                 "Content-type": "application/json",
                 "auth-token": localStorage.getItem('token')
             }
         })
-        const data=await response.json();
-        if(response.ok){
+        const data = await response.json();
+        if (response.ok) {
             doc_get_assis()
-        }else{
+        } else {
             alert(data)
         }
     }
-    const doc_get_assis=async ()=>{
-        const response=await fetch("http://localhost:5000/api/datatras/doctor/lab_assigned",{
+    const doc_get_assis = async () => {
+        const response = await fetch("http://localhost:5000/api/datatras/doctor/lab_assigned", {
             method: "GET",
-            headers:{
+            headers: {
                 "Content-type": "application/json",
                 "auth-token": localStorage.getItem('token')
             }
         })
-        const data=await response.json()
-        if(response.ok){
+        const data = await response.json()
+        if (response.ok) {
             setpati_assi_lab(data);
-        }else{
+        } else {
             alert(data);
         }
     }
-    const doc_get_assistant=async()=>{
-        const response=await fetch("http://localhost:5000/api/datatras/doctor/Assistant",{
+    const doc_get_assistant = async () => {
+        const response = await fetch("http://localhost:5000/api/datatras/doctor/Assistant", {
             method: "GET",
-            headers:{
+            headers: {
                 "Content-type": "application/json",
                 "auth-token": localStorage.getItem('token')
             }
         })
-        const data=await response.json()
-        if(response.ok){
+        const data = await response.json()
+        if (response.ok) {
             setdoc_assistent(data);
-        }else{
+        } else {
             alert(data);
         }
     }
-    const labassi_get_pati=async()=>{
-        const response=await fetch("http://localhost:5000/api/datatras/lab_assistant/patients",{
+    const labassi_get_pati = async () => {
+        const response = await fetch("http://localhost:5000/api/datatras/lab_assistant/patients", {
             method: "GET",
-            headers:{
+            headers: {
                 "Content-type": "application/json",
                 "auth-token": localStorage.getItem('token')
             }
         })
-        const data=await response.json();
-        if(response.ok){
+        const data = await response.json();
+        if (response.ok) {
             setlabassi_pati(data);
-        }else{
+        } else {
             alert(data);
         }
     }
-    const upload_patient_data=async(formate)=>{
-        const response=await fetch("http://localhost:5000/api/datatras//lab_assistant/upload",{
+
+
+    const upload_patient_data = async (formate) => {
+        const formData = new FormData();
+
+        formData.append("patient", formate.patient);
+
+        // ---------------- LIVER ----------------
+        if (formate.liverData) {
+            Object.keys(formate.liverData).forEach(key => {
+                formData.append(key, formate.liverData[key]);
+            });
+        }
+
+        // ---------------- SKIN ----------------
+        if (formate.skinFiles && formate.skinFiles.length > 0) {
+            formate.skinFiles.forEach(file => {
+                formData.append("images", file);
+            });
+        }
+
+        // ---------------- CVD ----------------
+        if (formate.cvdData) {
+            Object.keys(formate.cvdData).forEach(key => {
+                formData.append(key, formate.cvdData[key]);
+            });
+        }
+        const response = await fetch("http://localhost:5000/api/datatras/lab_assistant/upload", {
             method: "POST",
-            headers:{
-                "Content-type": "application/json",
+            headers: {
+                // "Content-type": "application/json",
                 "auth-token": localStorage.getItem('token')
             },
-            body:JSON.stringify(formate)
+            body: formData
         })
-        const data= await response.json();
-        if(response.ok){
+        const data = await response.json();
+        if (response.ok) {
             alert(data.message)
-        }else{
+        } else {
             alert(data)
         }
     }
 
     //predict crihossis
-    const prediction=async(id,lab_results)=>{
-        const response=await fetch(`http://localhost:5000/api/datatras/${id}/labdata`,{
+    const prediction = async (id, lab_results) => {
+        const response = await fetch(`http://localhost:5000/api/datatras/${id}/labdata`, {
             method: "POST",
-            headers:{
+            headers: {
                 "Content-type": "application/json",
                 "auth-token": localStorage.getItem('token')
             },
-            body:JSON.stringify(lab_results)
+            body: JSON.stringify(lab_results)
         })
-        const data=await response.json()
-        if(response.ok){
+        const data = await response.json()
+        if (response.ok) {
             setpredictedData(data);
             alert(data.success)
-        }else{
+        } else {
             alert(data);
         }
     }
 
     //patient get its own madical data
-    const medical_data=async()=>{
-        const responce=await fetch("http://localhost:5000/api/datatras/patient",{
+    const medical_data = async () => {
+        const responce = await fetch("http://localhost:5000/api/datatras/patient", {
             method: "GET",
-            headers:{
+            headers: {
                 "Content-type": "application/json",
                 "auth-token": localStorage.getItem('token')
             }
         })
-        const data=await responce.json()
-        if(responce.ok){
+        const data = await responce.json()
+        if (responce.ok) {
             setpatient_madical_data(data);
             console.log(data)
-        }else{
+        } else {
             alert(data)
         }
     }
+
+    const skin_predict = async (patientDataId, imageIndex = 0) => {
+    const response = await fetch('http://localhost:5000/api/models/skinPredict', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'auth-token': localStorage.getItem('token')
+        },
+        body: JSON.stringify({ patientDataId, imageIndex })
+    });
+    const data = await response.json();
+    if (response.ok) {
+        // Keyed by "patientDataId_imageIndex" so multiple predictions
+        // can be tracked at the same time in the UI
+        setSkinPredictions(prev => ({
+            ...prev,
+            [`${patientDataId}_${imageIndex}`]: data.prediction
+        }));
+        return data.prediction;
+    } else {
+        alert(data.error || 'Skin prediction failed');
+        return null;
+    }
+};
+
+const skin_predict_all = async (patientDataId) => {
+    const response = await fetch('http://localhost:5000/api/models/skinPredictAll', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'auth-token': localStorage.getItem('token')
+        },
+        body: JSON.stringify({ patientDataId })
+    });
+    const data = await response.json();
+    if (response.ok) {
+        const newPredictions = {};
+        data.predictions.forEach((pred, idx) => {
+            if (!pred.error) {
+                newPredictions[`${patientDataId}_${idx}`] = pred;
+            }
+        });
+        setSkinPredictions(prev => ({ ...prev, ...newPredictions }));
+        return data.predictions;
+    } else {
+        alert(data.error || 'Bulk skin prediction failed');
+        return null;
+    }
+};
     return (
         <PatientContext.Provider value={{
-            patientdata, logininfo, assignments, Doctors, Patients, Assistent, doc_assistent,pati_assi_lab,labassi_pati,
-            predictedData,patient_madical_data,
+            patientdata, logininfo, assignments, Doctors, Patients, Assistent, doc_assistent, pati_assi_lab, labassi_pati,
+            predictedData, patient_madical_data,skinPredictions,
             fetchdata, info, fetchassignment, createassignment, getdoctors, getpatients,
-            getlabassistant, createdoctor, createlab_assistant, createPatient, deleteassignment, 
-            deleterole, doc_create_assig, doc_get_assis, labassi_get_pati,doc_get_assistant, doc_delete_assig,
-            upload_patient_data, prediction, medical_data
+            getlabassistant, createdoctor, createlab_assistant, createPatient, deleteassignment,
+            deleterole, doc_create_assig, doc_get_assis, labassi_get_pati, doc_get_assistant, doc_delete_assig,
+            upload_patient_data, prediction, medical_data, skin_predict, skin_predict_all
         }}>
             {props.children}
         </PatientContext.Provider>
