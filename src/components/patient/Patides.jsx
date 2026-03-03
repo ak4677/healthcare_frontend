@@ -1,6 +1,7 @@
 import React, { useEffect, useContext, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import PatientContext from '../../context/info/PatientContext';
+import HealthConsultant from './HealthConsultant';
 
 export default function Patides() {
     const { id } = useParams();
@@ -365,7 +366,7 @@ export default function Patides() {
                                                             // Fallback: images[imgIdx] (raw upload path, for unpredicted images)
                                                             const rawPath  = result?.image_path || images[imgIdx] || '';
                                                             const imgSrc   = rawPath
-                                                                ? `http://localhost:5173/${rawPath.replace(/\\/g, '/')}`
+                                                                ? `http://localhost:5000/${rawPath.replace(/\\/g, '/')}`
                                                                 : null;
                                                             const gradSrc  = result?.gradcam_image_url
                                                                 ? `http://localhost:5000${result.gradcam_image_url.replace(/\\/g, '/')}`
@@ -596,7 +597,10 @@ export default function Patides() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>=
+
+            {/* ── AI Health Consultant — visible to patients and doctors ── */}
+            <HealthConsultant patient={patient} />
         </div>
     )
 }
