@@ -46,7 +46,7 @@ export default function Patientcard({ patient }) {
                             {patient.name}
                         </h3>
                         <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                            Patient ID: {patient._id?.slice(-6) || "N/A"}
+                            Patient ID: {patient._id}
                         </span>
                     </div>
                 </div>

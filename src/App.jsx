@@ -10,6 +10,8 @@ import Docdes from './components/doctor/Docdes'
 import Info from './components/Info'
 import Admindes from './components/admin/Admindes'
 import Signup from './components/Signup'
+import AdminKey from './components/admin/AdminKey'
+import CreateAdmin from './components/admin/CreateAdmin'
 function App() {
 
   return (
@@ -27,6 +29,8 @@ function App() {
           <Route path="/Labentry" element={<Labentry />} />
           <Route path="/Info" element={<Info />} />
           <Route path="/Admindes" element={<Admindes />} />
+          <Route path="/AdminKey" element={<AdminKey />} />
+          <Route path="/CreateAdmin" element={<CreateAdmin />} />
         </Routes>
       </BrowserRouter>
     </DataFetch>

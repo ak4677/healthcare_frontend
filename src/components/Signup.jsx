@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import PatientContext from '../context/info/PatientContext';
-
+const backend=import.meta.env.VITE_BACKEND
 export default function Signup() {
     const navigator = useNavigate()
     const fetching = useContext(PatientContext)
@@ -15,7 +15,7 @@ export default function Signup() {
             if (credential.password === credential.confirm_password) {
                 // console.log(localStorage.getItem('role'))
                 const role=(localStorage.getItem('role') || '').toLowerCase();
-                const response = await fetch(`http://localhost:5000/api/auth/${role}/signup`, {
+                const response = await fetch(`${backend}/api/auth/${role}/signup`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

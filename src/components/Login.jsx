@@ -1,50 +1,65 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import PatientContext from '../context/info/PatientContext';
+import ReCAPTCHA from "react-google-recaptcha";
+import { useRef } from "react";
+
 
 export default function Login() {
     const navigator = useNavigate()
-    const fetching=useContext(PatientContext)
-    const {info}=fetching;
+    const captchaRef = useRef(null);
+    const fetching = useContext(PatientContext)
+    const { info } = fetching;
     const currentRole = localStorage.getItem('role') || 'User';
     const displayRole = currentRole.charAt(0).toUpperCase() + currentRole.slice(1).replace('_', ' ');
     const [credential, setCredential] = useState({ email: "", password: "" })
-    const navigation=()=>{
-        let x=localStorage.getItem('role').toLowerCase()
-            if(x==='doctor'){
-                navigator("/Docdes");
-            }
-            else if(x==='admin'){
-                localStorage.setItem('fetch','assignments')
-                navigator("/Admindes")
-            }
-            else if(x==='patient'){
-                navigator("/Patides")
-            }
-            else if(x==='lab_assistant'){
-                navigator("/Labentry")
-            }
-            else{
-                console.log("error in login")
-            }
+    const navigation = () => {
+        let x = localStorage.getItem('role').toLowerCase()
+        if (x === 'doctor') {
+            navigator("/Docdes");
+        }
+        else if (x === 'admin') {
+            localStorage.setItem('fetch', 'assignments')
+            navigator("/Admindes")
+        }
+        else if (x === 'patient') {
+            navigator("/Patides")
+        }
+        else if (x === 'lab_assistant') {
+            navigator("/Labentry")
+        }
+        else {
+            console.log("error in login")
+        }
     }
     const submit = async (e) => {
         e.preventDefault();
         try {
+            const captchaToken = captchaRef.current.getValue();
+
+            if (!captchaToken) {
+                alert("Please verify captcha");
+                return;
+            }
             console.log(localStorage.getItem('role'))
-            const response = await fetch("http://localhost:5000/api/auth/login", {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND}/api/auth/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ email: credential.email, passward: credential.password,role: localStorage.getItem('role') }),
+                body: JSON.stringify({ email: credential.email, passward: credential.password, role: localStorage.getItem('role'), captchaToken }),
             });
-            const data=await response.json();
-            localStorage.setItem('token',data)
-            
+            const data = await response.json();
+            if (!response.ok) {
+                captchaRef.current.reset();
+                alert(data.message || "Login failed");
+                return;
+            }
+            localStorage.setItem('token', data)
+
             navigation()
 
-        } catch (error) {  
+        } catch (error) {
             alert("wrong credential login")
         }
 
@@ -55,7 +70,7 @@ export default function Login() {
     }
     return (
         <div className="min-h-screen w-full flex items-center justify-center bg-slate-50 relative">
-            
+
             {/* Background Blur Effect (Optional) */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-blue-100 blur-3xl opacity-50"></div>
@@ -64,7 +79,7 @@ export default function Login() {
 
             {/* Main Card */}
             <div className="relative w-full max-w-md bg-white rounded-2xl shadow-xl p-8 m-4">
-                
+
                 {/* Header Section */}
                 <div className="flex flex-col items-center mb-8">
                     <div className="h-12 w-12 bg-blue-600 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-blue-200">
@@ -79,7 +94,7 @@ export default function Login() {
 
                 {/* Form Section */}
                 <form className="space-y-6" onSubmit={submit}>
-                    
+
                     {/* ID / Email Input */}
                     <div>
                         <label htmlFor="email" className="block text-sm font-semibold text-slate-700 mb-2">ID / Email Address</label>
@@ -90,15 +105,15 @@ export default function Login() {
                                     <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                                 </svg>
                             </div>
-                            <input 
-                                type="email" 
-                                name="email" 
-                                id="email" 
-                                className="bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-3 outline-none transition-all" 
-                                placeholder="Enter your ID or email" 
-                                required 
-                                value={credential.email} 
-                                onChange={onChange} 
+                            <input
+                                type="email"
+                                name="email"
+                                id="email"
+                                className="bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-3 outline-none transition-all"
+                                placeholder="Enter your ID or email"
+                                required
+                                value={credential.email}
+                                onChange={onChange}
                             />
                         </div>
                     </div>
@@ -112,15 +127,15 @@ export default function Login() {
                                     <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                                 </svg>
                             </div>
-                            <input 
-                                type="password" 
-                                name="password" 
-                                id="password" 
-                                placeholder="••••••••" 
-                                className="bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-3 outline-none transition-all" 
-                                required 
-                                value={credential.password} 
-                                onChange={onChange} 
+                            <input
+                                type="password"
+                                name="password"
+                                id="password"
+                                placeholder="••••••••"
+                                className="bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-3 outline-none transition-all"
+                                required
+                                value={credential.password}
+                                onChange={onChange}
                             />
                         </div>
                     </div>
@@ -134,10 +149,13 @@ export default function Login() {
                         {/* eslint-disable-next-line */}
                         <a href="#" className="text-sm font-medium text-blue-600 hover:underline">Forgot Password?</a>
                     </div>
-
+                    <ReCAPTCHA
+                        sitekey={import.meta.env.VITE_SITE_KEY}
+                        ref={captchaRef}
+                    />
                     {/* Submit Button */}
-                    <button 
-                        type="submit" 
+                    <button
+                        type="submit"
                         className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-3.5 text-center shadow-lg shadow-blue-500/30 transition-all duration-200 hover:-translate-y-0.5"
                     >
                         Secure Login
@@ -145,9 +163,9 @@ export default function Login() {
 
                     {/* Back Link */}
                     <div className="text-center mt-4">
-                        <button 
-                            type="button" 
-                            onClick={() => navigator("/")} 
+                        <button
+                            type="button"
+                            onClick={() => navigator("/")}
                             className="text-sm text-slate-500 hover:text-slate-800 flex items-center justify-center w-full gap-2 transition-colors"
                         >
                             <span>←</span> Back to role selection
@@ -161,12 +179,13 @@ export default function Login() {
                         </p>
                         <div className="mt-2 text-sm font-medium text-slate-600">
                             Not Activated? <a href="/Signup" className="text-blue-600 hover:underline">Sign-up here</a>
+                            <a href="/AdminKey">Create Admin Account</a>
                         </div>
                     </div>
 
                 </form>
             </div>
-            
+
             <div className="absolute bottom-4 text-slate-400 text-xs">
                 © 2026 Smart Health Care Systems
             </div>

@@ -17,9 +17,17 @@ export default function DataFetch(props) {
     const [predictedData, setpredictedData] = useState(intial)
     const [patient_madical_data, setpatient_madical_data] = useState(intial)
     const [skinPredictions, setSkinPredictions] = useState({});
+
+    const [appointments, setAppointments] = useState([]);
+    const [emergencyDoctors, setEmergencyDoctors] = useState([]);
+    const [assignedDoctor, setAssignedDoctor] = useState(null);
+
+
+    const backend=import.meta.env.VITE_BACKEND
+    // console.log(backend);
     //patient data fetching
     const fetchdata = async () => {
-        const response = await fetch("http://localhost:5000/api/datatras/doctor/patients", {
+        const response = await fetch(`${backend}/api/datatras/doctor/patients`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -27,13 +35,13 @@ export default function DataFetch(props) {
             }
         })
         const data = await response.json();
-        console.log("fetching"+data);
+        console.log("fetching" + data);
         Setpatinetdata(data)
     }
 
     //login into the system
     const info = async () => {
-        const response = await fetch("http://localhost:5000/api/datatras/getinfo", {
+        const response = await fetch(`${backend}/api/datatras/getinfo`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -47,7 +55,7 @@ export default function DataFetch(props) {
 
     //fetching all assignments of the admin
     const fetchassignment = async () => {
-        const response = await fetch("http://localhost:5000/api/datatras/assignments", {
+        const response = await fetch(`${backend}/api/datatras/assignments`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -62,7 +70,7 @@ export default function DataFetch(props) {
 
     //cleate all assignments of the admin
     const createassignment = async (doctor_id, patient_id) => {
-        const response = await fetch("http://localhost:5000/api/datatras/assignments", {
+        const response = await fetch(`${backend}/api/datatras/assignments`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -83,7 +91,7 @@ export default function DataFetch(props) {
 
     //ge all doctors after login 
     const getdoctors = async () => {
-        const response = await fetch("http://localhost:5000/api/datatras//admin/doctors", {
+        const response = await fetch(`${backend}/api/datatras//admin/doctors`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -97,7 +105,7 @@ export default function DataFetch(props) {
 
     //get all the patients
     const getpatients = async () => {
-        const response = await fetch("http://localhost:5000/api/datatras//admin/patients", {
+        const response = await fetch(`${backend}/api/datatras//admin/patients`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -110,7 +118,7 @@ export default function DataFetch(props) {
     }
     //get all lab_assitant
     const getlabassistant = async () => {
-        const response = await fetch("http://localhost:5000/api/datatras//admin/Assistant", {
+        const response = await fetch(`${backend}/api/datatras//admin/Assistant`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -124,7 +132,7 @@ export default function DataFetch(props) {
 
     //create new doctor
     const createdoctor = async (name, email, Number) => {
-        const response = await fetch("http://localhost:5000/api/auth/createdoc", {
+        const response = await fetch(`${backend}/api/auth/createdoc`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -144,7 +152,7 @@ export default function DataFetch(props) {
 
     //create new patient
     const createPatient = async (name, email, Number, Age, sex) => {
-        const response = await fetch("http://localhost:5000/api/auth/addpatient", {
+        const response = await fetch(`${backend}/api/auth/addpatient`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -164,7 +172,7 @@ export default function DataFetch(props) {
 
     //create new lab_assistant
     const createlab_assistant = async (name, email, Number, lab_name) => {
-        const response = await fetch("http://localhost:5000/api/auth/createlabassis", {
+        const response = await fetch(`${backend}/api/auth/createlabassis`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -184,7 +192,7 @@ export default function DataFetch(props) {
 
     //deleting assignment
     const deleteassignment = async (id) => {
-        const response = await fetch(`http://localhost:5000/api/datatras/deleteassignment/${id}`, {
+        const response = await fetch(`${backend}/api/datatras/deleteassignment/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -200,7 +208,7 @@ export default function DataFetch(props) {
     }
     const deleterole = async (id) => {
         const role = localStorage.getItem('fetch');
-        const response = await fetch(`http://localhost:5000/api/datatras/delete/${id}`, {
+        const response = await fetch(`${backend}/api/datatras/delete/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -221,7 +229,7 @@ export default function DataFetch(props) {
     }
 
     const doc_create_assig = async (patient, lab_assistant) => {
-        const response = await fetch("http://localhost:5000/api/datatras/doctor/assign-lab", {
+        const response = await fetch(`${backend}/api/datatras/doctor/assign-lab`, {
             method: "POST",
             headers: {
                 "Content-type": "application/json",
@@ -239,7 +247,7 @@ export default function DataFetch(props) {
     }
 
     const doc_delete_assig = async (id) => {
-        const response = await fetch(`http://localhost:5000/api/datatras/doctor/deletelab/${id}`, {
+        const response = await fetch(`${backend}/api/datatras/doctor/deletelab/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-type": "application/json",
@@ -254,7 +262,7 @@ export default function DataFetch(props) {
         }
     }
     const doc_get_assis = async () => {
-        const response = await fetch("http://localhost:5000/api/datatras/doctor/lab_assigned", {
+        const response = await fetch(`${backend}/api/datatras/doctor/lab_assigned`, {
             method: "GET",
             headers: {
                 "Content-type": "application/json",
@@ -269,7 +277,7 @@ export default function DataFetch(props) {
         }
     }
     const doc_get_assistant = async () => {
-        const response = await fetch("http://localhost:5000/api/datatras/doctor/Assistant", {
+        const response = await fetch(`${backend}/api/datatras/doctor/Assistant`, {
             method: "GET",
             headers: {
                 "Content-type": "application/json",
@@ -284,7 +292,7 @@ export default function DataFetch(props) {
         }
     }
     const labassi_get_pati = async () => {
-        const response = await fetch("http://localhost:5000/api/datatras/lab_assistant/patients", {
+        const response = await fetch(`${backend}/api/datatras/lab_assistant/patients`, {
             method: "GET",
             headers: {
                 "Content-type": "application/json",
@@ -325,7 +333,7 @@ export default function DataFetch(props) {
                 formData.append(key, formate.cvdData[key]);
             });
         }
-        const response = await fetch("http://localhost:5000/api/datatras/lab_assistant/upload", {
+        const response = await fetch(`${backend}/api/datatras/lab_assistant/upload`, {
             method: "POST",
             headers: {
                 // "Content-type": "application/json",
@@ -343,7 +351,7 @@ export default function DataFetch(props) {
 
     //predict crihossis
     const prediction = async (id, lab_results) => {
-        const response = await fetch(`http://localhost:5000/api/datatras/${id}/labdata`, {
+        const response = await fetch(`${backend}/api/datatras/${id}/labdata`, {
             method: "POST",
             headers: {
                 "Content-type": "application/json",
@@ -362,7 +370,7 @@ export default function DataFetch(props) {
 
     //patient get its own madical data
     const medical_data = async () => {
-        const responce = await fetch("http://localhost:5000/api/datatras/patient", {
+        const responce = await fetch(`${backend}/api/datatras/patient`, {
             method: "GET",
             headers: {
                 "Content-type": "application/json",
@@ -379,61 +387,252 @@ export default function DataFetch(props) {
     }
 
     const skin_predict = async (patientDataId, imageIndex = 0) => {
-    const response = await fetch('http://localhost:5000/api/models/skinPredict', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'auth-token': localStorage.getItem('token')
-        },
-        body: JSON.stringify({ patientDataId, imageIndex })
-    });
-    const data = await response.json();
-    if (response.ok) {
-        // Keyed by "patientDataId_imageIndex" so multiple predictions
-        // can be tracked at the same time in the UI
-        setSkinPredictions(prev => ({
-            ...prev,
-            [`${patientDataId}_${imageIndex}`]: data.prediction
-        }));
-        return data.prediction;
-    } else {
-        alert(data.error || 'Skin prediction failed');
-        return null;
-    }
-};
+        const response = await fetch(`${backend}/api/models/skinPredict`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'auth-token': localStorage.getItem('token')
+            },
+            body: JSON.stringify({ patientDataId, imageIndex })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            // Keyed by "patientDataId_imageIndex" so multiple predictions
+            // can be tracked at the same time in the UI
+            setSkinPredictions(prev => ({
+                ...prev,
+                [`${patientDataId}_${imageIndex}`]: data.prediction
+            }));
+            return data.prediction;
+        } else {
+            alert(data.error || 'Skin prediction failed');
+            return null;
+        }
+    };
 
-const skin_predict_all = async (patientDataId) => {
-    const response = await fetch('http://localhost:5000/api/models/skinPredictAll', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'auth-token': localStorage.getItem('token')
-        },
-        body: JSON.stringify({ patientDataId })
-    });
-    const data = await response.json();
-    if (response.ok) {
-        const newPredictions = {};
-        data.predictions.forEach((pred, idx) => {
-            if (!pred.error) {
-                newPredictions[`${patientDataId}_${idx}`] = pred;
+    const skin_predict_all = async (patientDataId) => {
+        const response = await fetch(`${backend}/api/models/skinPredictAll`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'auth-token': localStorage.getItem('token')
+            },
+            body: JSON.stringify({ patientDataId })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            const newPredictions = {};
+            data.predictions.forEach((pred, idx) => {
+                if (!pred.error) {
+                    newPredictions[`${patientDataId}_${idx}`] = pred;
+                }
+            });
+            setSkinPredictions(prev => ({ ...prev, ...newPredictions }));
+            return data.predictions;
+        } else {
+            alert(data.error || 'Bulk skin prediction failed');
+            return null;
+        }
+    };
+
+    // ── Liver cirrhosis prediction ────────────────────────────────────────────────
+    const predict_liver = async (patientDataId) => {
+        const response = await fetch(`${backend}/api/datatras/${patientDataId}/predict/liver`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'auth-token': localStorage.getItem('token')
             }
         });
-        setSkinPredictions(prev => ({ ...prev, ...newPredictions }));
-        return data.predictions;
-    } else {
-        alert(data.error || 'Bulk skin prediction failed');
-        return null;
-    }
-};
+        const data = await response.json();
+        if (response.ok) {
+            return data;
+        } else {
+            throw new Error(data.error || 'Liver prediction failed');
+        }
+    };
+
+    // ── CVD prediction ────────────────────────────────────────────────────────────
+    const predict_cvd = async (patientDataId) => {
+        const response = await fetch(`${backend}/api/datatras/${patientDataId}/predict/cvd`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'auth-token': localStorage.getItem('token')
+            }
+        });
+        const data = await response.json();
+        if (response.ok) {
+            return data;
+        } else {
+            throw new Error(data.error || 'CVD prediction failed');
+        }
+    };
+
+    // ── Basic health prediction ───────────────────────────────────────────────────
+    const predict_basic = async (patientDataId) => {
+        const response = await fetch(`${backend}/api/datatras/${patientDataId}/predict/basic`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'auth-token': localStorage.getItem('token')
+            }
+        });
+        const data = await response.json();
+        if (response.ok) {
+            return data;
+        } else {
+            throw new Error(data.error || 'Basic health prediction failed');
+        }
+    };
+
+    // Fetch patient's or doctor's appointments
+    const fetchAppointments = async () => {
+        const response = await fetch(`${backend}/api/appointments/my`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "auth-token": localStorage.getItem("token")
+            }
+        });
+        const data = await response.json();
+        if (response.ok) setAppointments(Array.isArray(data) ? data : []);
+        else console.error("Failed to fetch appointments:", data);
+    };
+
+    // Fetch the doctor assigned to this patient
+    const fetchAssignedDoctor = async () => {
+        const response = await fetch(`${backend}/api/appointments/doctors/assigned`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "auth-token": localStorage.getItem("token")
+            }
+        });
+        const data = await response.json();
+        if (response.ok) setAssignedDoctor(data);
+    };
+
+    // Fetch all doctors for emergency (with availability status + distance)
+    const fetchEmergencyDoctors = async (lat, lng) => {
+        const query = lat && lng ? `?lat=${lat}&lng=${lng}` : "";
+        const response = await fetch(`${backend}/api/appointments/doctors/emergency${query}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "auth-token": localStorage.getItem("token")
+            }
+        });
+        const data = await response.json();
+        if (response.ok) setEmergencyDoctors(Array.isArray(data) ? data : []);
+    };
+
+    // Book a normal appointment
+    const bookAppointment = async ({ doctor_id, scheduled_at, consultation_type, reason }) => {
+        const response = await fetch(`${backend}/api/appointments`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "auth-token": localStorage.getItem("token")
+            },
+            body: JSON.stringify({ doctor_id, scheduled_at, type: "normal", consultation_type, reason })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            fetchAppointments();
+            alert(data.message);
+        } else {
+            alert(data.error || "Failed to book appointment");
+        }
+    };
+
+    // Book an emergency appointment
+    const bookEmergencyAppointment = async ({ doctor_id, scheduled_at, patient_location }) => {
+        const response = await fetch(`${backend}/api/appointments`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "auth-token": localStorage.getItem("token")
+            },
+            body: JSON.stringify({
+                doctor_id,
+                scheduled_at,
+                type: "emergency",
+                consultation_type: "video",
+                reason: "Emergency consultation",
+                patient_location
+            })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            fetchAppointments();
+            alert(data.message);
+        } else {
+            alert(data.error || "Failed to book emergency appointment");
+        }
+    };
+
+    // Doctor: confirm or decline an appointment
+    const updateAppointmentStatus = async (appointmentId, status, doctor_note = "") => {
+        const response = await fetch(`${backend}/api/appointments/${appointmentId}/status`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "auth-token": localStorage.getItem("token")
+            },
+            body: JSON.stringify({ status, doctor_note })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            fetchAppointments();
+            alert(data.message);
+        } else {
+            alert(data.error || "Failed to update appointment");
+        }
+    };
+
+    // Doctor: mark appointment as completed
+    const completeAppointment = async (appointmentId) => {
+        const response = await fetch(`${backend}/api/appointments/${appointmentId}/complete`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "auth-token": localStorage.getItem("token")
+            }
+        });
+        const data = await response.json();
+        if (response.ok) fetchAppointments();
+        else alert(data.error || "Failed to complete appointment");
+    };
+
+    // Patient: cancel a pending appointment
+    const cancelAppointment = async (appointmentId) => {
+        const response = await fetch(`${backend}/api/appointments/${appointmentId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "auth-token": localStorage.getItem("token")
+            }
+        });
+        const data = await response.json();
+        if (response.ok) {
+            fetchAppointments();
+            alert(data.message);
+        } else {
+            alert(data.error || "Failed to cancel");
+        }
+    };
     return (
         <PatientContext.Provider value={{
             patientdata, logininfo, assignments, Doctors, Patients, Assistent, doc_assistent, pati_assi_lab, labassi_pati,
-            predictedData, patient_madical_data,skinPredictions,
+            predictedData, patient_madical_data, skinPredictions, appointments, emergencyDoctors, assignedDoctor,
             fetchdata, info, fetchassignment, createassignment, getdoctors, getpatients,
             getlabassistant, createdoctor, createlab_assistant, createPatient, deleteassignment,
             deleterole, doc_create_assig, doc_get_assis, labassi_get_pati, doc_get_assistant, doc_delete_assig,
-            upload_patient_data, prediction, medical_data, skin_predict, skin_predict_all
+            upload_patient_data, prediction, medical_data, skin_predict, skin_predict_all,
+            fetchAppointments, fetchAssignedDoctor, fetchEmergencyDoctors,
+            bookAppointment, bookEmergencyAppointment,
+            updateAppointmentStatus, completeAppointment, cancelAppointment, predict_liver, predict_cvd, predict_basic
         }}>
             {props.children}
         </PatientContext.Provider>
