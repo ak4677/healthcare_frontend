@@ -16,7 +16,7 @@ function App() {
 
   return (
     <DataFetch>
-      <BrowserRouter >
+      <BrowserRouter basename="/healthcare_frontend">
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
