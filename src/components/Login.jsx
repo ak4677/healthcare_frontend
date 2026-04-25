@@ -178,8 +178,8 @@ export default function Login() {
                             Need help? Contact support@smarthealth.com
                         </p>
                         <div className="mt-2 text-sm font-medium text-slate-600">
-                            Not Activated? <a href="/Signup" className="text-blue-600 hover:underline">Sign-up here</a>
-                            <a href="/AdminKey">Create Admin Account</a>
+                            Not Activated? <a href="/healthcare_frontend/Signup" className="text-blue-600 hover:underline">Sign-up here</a>
+                            {localStorage.getItem('role').toLowerCase()=='admin'?<a href="/healthcare_frontend/AdminKey">Create Admin Account</a>:""}
                         </div>
                     </div>
 

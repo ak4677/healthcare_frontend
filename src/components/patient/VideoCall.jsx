@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 // Install:  npm install socket.io-client
 // The socket connects to your Express server (port 5000)
 
-const SOCKET_URL = import.meta.env.VITE_BACKEND;
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
 
 const ICE_SERVERS = {
     iceServers: [

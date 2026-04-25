@@ -56,13 +56,13 @@ export default function Consultationchat({ patientId }) {
     const typingTimer = useRef(null);
 
     const myName = localStorage.getItem('username') || (isDoctor() ? 'Doctor' : 'Patient');
-    // const myId   = localStorage.getItem('userId')   || '';
+    const myId   = patientId;
     console.log(typeof patientId)
     // ── Load thread ──────────────────────────────────────────────────────────
     useEffect(() => {
         if (!patientId) return;
-        // const targetId = isDoctor() ? patientId : myId;
-        const targetId=patientId
+        const targetId = isDoctor() ? patientId : myId;
+        // const targetId=patientId
         loadThread(targetId);
         // eslint-disable-next-line
     }, [patientId]);
